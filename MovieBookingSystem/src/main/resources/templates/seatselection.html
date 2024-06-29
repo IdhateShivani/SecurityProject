@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seat Selection</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <h2>Seat Selection</h2>
+    <div class="seat-section">
+        <h3>Front Seats (₹100)</h3>
+        <div class="seats" th:each="seat : ${seats}">
+            <div class="seat" th:class="${seat.available} ? 'available' : 'unavailable'" th:text="${seat.seatNumber}" th:data-id="${seat.id}" th:data-price="${seat.price}" onclick="selectSeat(this)"></div>
+        </div>
+    </div>
+    <div class="selected-seats">
+        Selected Seats: <span id="selected-seats"></span>
+        <br>
+        Total Price: <span id="total-price">₹0</span>
+    </div>
+    <button onclick="confirmBooking()">Confirm Booking</button>
+
+    <script>
+        let selectedSeats = [];
+        let totalPrice = 0;
+
+        function selectSeat(seat) {
+            const seatId = seat.getAttribute('data-id');
+            const seatPrice = parseInt(seat.getAttribute('data-price'));
+            if (seat.classList.contains('selected')) {
+                seat.classList.remove('selected');
+                selectedSeats = selectedSeats.filter(id => id !== seatId);
+                totalPrice -= seatPrice;
+            } else {
+                seat.classList.add('selected');
+                selectedSeats.push(seatId);
+                totalPrice += seatPrice;
+            }
+            document.getElementById('selected-seats').textContent = selectedSeats.join(', ');
+            document.getElementById('total-price').textContent = `₹${totalPrice}`;
+        }
+
+        function confirmBooking() {
+            fetch('/confirm-booking', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ seatIds: selectedSeats })
+            }).then(response => {
+                if (response.ok) {
+                    window.location.href = '/receipt';
+                }
+            });
+        }
+    </script>
+</body>
+</html>

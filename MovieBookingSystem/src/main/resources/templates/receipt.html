@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Receipt</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <h2>Booking Confirmation</h2>
+    <p>Thank you for your booking!</p>
+    <p>Movie: <span th:text="${selectedMovie}"></span></p>
+    <p>Showtime: <span th:text="${selectedShowtime}"></span></p>
+    <p>Seats: <span th:text="${selectedSeats}"></span></p>
+    <p>Total Price: <span th:text="${totalPrice}"></span></p>
+</body>
+</html>
